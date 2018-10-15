@@ -24,18 +24,6 @@ func getKube() string {
 		return ""
 	}
 
-	namespaceBytes, err := ioutil.ReadFile(filepath.Join(os.Getenv("HOME"), ".kubectl-namespace"))
-	namespace := strings.TrimSpace(string(namespaceBytes))
-	if err != nil {
-		if !os.IsNotExist(err) {
-			handleError(err)
-		}
-		namespace = ""
-	}
-	if namespace != "" {
-		context = fmt.Sprintf("(%v/%v)", context, namespace)
-	}
-
 	return withColor(red, context)
 }
 
@@ -50,10 +38,30 @@ func getKubeCtx(configPath string) string {
 	}
 
 	var data struct {
+		Contexts []struct {
+			Context struct {
+				Cluster   string `yaml:"cluster"`
+				Namespace string `yaml:"namespace"`
+				User      string `yaml:"user"`
+			} `yaml:"context"`
+			Name string `yaml:"name"`
+		} `yaml:"contexts"`
 		CurrentContext string `yaml:"current-context"`
 	}
 	err = yaml.Unmarshal(buf, &data)
 	handleError(err)
+
+	if data.CurrentContext == "" {
+		return ""
+	}
+
+	for _, c := range data.Contexts {
+		if c.Name == data.CurrentContext {
+			return fmt.Sprintf("(%v/%v)", strings.TrimSpace(data.CurrentContext),
+				strings.TrimSpace(c.Context.Namespace))
+		}
+	}
+
 	return strings.TrimSpace(data.CurrentContext)
 }
 
