@@ -3,6 +3,8 @@ package main
 import (
 	"os"
 	"strings"
+
+	"github.com/talal/mimir/pkg/prompt"
 )
 
 func main() {
@@ -12,17 +14,11 @@ func main() {
 	}
 
 	var line []string
-	line = appendUnlessEmpty(line, getDir())
-	line = appendUnlessEmpty(line, getKube())
-	line = appendUnlessEmpty(line, getOSCloud())
+	line = appendUnlessEmpty(line, prompt.GetDir())
+	line = appendUnlessEmpty(line, prompt.GetKube())
+	line = appendUnlessEmpty(line, prompt.GetOSCloud())
 
 	os.Stdout.Write([]byte("\n" + strings.Join(line, " ") + "\n"))
-}
-
-func handleError(err error) {
-	if err != nil {
-		os.Stderr.Write([]byte("\x1B[1;31mPrompt error: " + err.Error() + "\x1B[0m\n"))
-	}
 }
 
 func appendUnlessEmpty(list []string, val string) []string {

@@ -1,6 +1,9 @@
-package main
+package prompt
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 
 type color string
 
@@ -14,4 +17,10 @@ var (
 
 func withColor(c color, str string) string {
 	return fmt.Sprintf("\x1B[%sm%s\x1B[0m", c, str)
+}
+
+func handleError(err error) {
+	if err != nil {
+		os.Stderr.Write([]byte("\x1B[1;31mPrompt error: " + err.Error() + "\x1B[0m\n"))
+	}
 }

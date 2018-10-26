@@ -1,4 +1,4 @@
-package main
+package prompt
 
 import (
 	"io/ioutil"
@@ -7,7 +7,9 @@ import (
 	"strings"
 )
 
-func getDir() string {
+// GetDir returns the current working directory and the
+// git branch (if the directory is a git repo).
+func GetDir() string {
 	cwd, err := os.Getwd()
 	if err != nil {
 		handleError(err)

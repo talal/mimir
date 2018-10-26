@@ -1,4 +1,4 @@
-package main
+package prompt
 
 import (
 	"fmt"
@@ -10,7 +10,9 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-func getKube() string {
+// GetKube iterates over the config files defined in the "KUBECONFIG" environment
+// variable and returns the current kubernetes context and namespace.
+func GetKube() string {
 	configPaths := filepath.SplitList(os.Getenv("KUBECONFIG"))
 
 	var context string
@@ -30,7 +32,8 @@ func getKube() string {
 func getKubeCtx(configPath string) string {
 	buf, err := ioutil.ReadFile(configPath)
 	if err != nil {
-		//non-existence is acceptable, just make the caller continue with the next configPath
+		//non-existence is acceptable, just make the caller continue
+		// with the next configPath
 		if !os.IsNotExist(err) {
 			handleError(err)
 		}
@@ -65,10 +68,13 @@ func getKubeCtx(configPath string) string {
 	return strings.TrimSpace(data.CurrentContext)
 }
 
-func getOSCloud() string {
+// GetOSCloud uses the "CURRENT_OS_CLOUD" enviroment variable to return
+// the current OpenStack cloud.
+func GetOSCloud() string {
 	cloudName := os.Getenv("CURRENT_OS_CLOUD")
 	if cloudName == "" {
 		return ""
 	}
+
 	return withColor(bBlack, cloudName)
 }
