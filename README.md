@@ -1,5 +1,6 @@
 # Mímir
 
+[![GitHub release](https://img.shields.io/github/release/talal/mimir.svg)](https://github.com/talal/mimir/releases/latest)
 [![Build Status](https://travis-ci.org/talal/mimir.svg?branch=master)](https://travis-ci.org/talal/mimir)
 [![Go Report Card](https://goreportcard.com/badge/github.com/talal/mimir)](https://goreportcard.com/report/github.com/talal/mimir)
 
@@ -13,6 +14,10 @@ Features:
 - OpenStack cloud info is shown using the `CURRENT_OS_CLOUD` environment variable.
 
 ## Installation
+
+Download the latest pre-compiled binary from the [releases](https://github.com/talal/mimir/releases/latest) page.
+
+Alternatively, you can also build from source:
 
 The only required build dependency is [Go](https://golang.org/).
 
@@ -30,7 +35,7 @@ Add this to your `.zshrc` file:
 
 ```
 autoload -Uz add-zsh-hook
-prompt_mimir_cmd() { /usr/local/bin/mimir }
+prompt_mimir_cmd() { /path/to/mimir }
 add-zsh-hook precmd prompt_mimir_cmd
 
 prompt_symbol='❯'

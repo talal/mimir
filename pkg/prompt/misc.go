@@ -7,12 +7,11 @@ import (
 
 type color string
 
-var (
-	bBlack  color = "0;90"
-	red     color = "0;31"
-	blue    color = "0;34"
-	magenta color = "0;35"
-	cyan    color = "0;36"
+const (
+	bBlack color = "0;90"
+	red    color = "0;31"
+	blue   color = "0;34"
+	cyan   color = "0;36"
 )
 
 func withColor(c color, str string) string {
