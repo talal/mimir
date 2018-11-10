@@ -68,13 +68,37 @@ func getKubeCtx(configPath string) string {
 	return strings.TrimSpace(data.CurrentContext)
 }
 
-// GetOSCloud uses the "CURRENT_OS_CLOUD" enviroment variable to return
-// the current OpenStack cloud.
+// GetOSCloud returns the current OpenStack cloud info using the "CURRENT_OS_CLOUD"
+// enviroment variable, if set. If not, then individual OpenStack environment variables
+// are used to get the cloud info.
 func GetOSCloud() string {
-	cloudName := os.Getenv("CURRENT_OS_CLOUD")
-	if cloudName == "" {
-		return ""
+	cloudInfo := os.Getenv("CURRENT_OS_CLOUD")
+	if cloudInfo == "" {
+		osRegion := getOSEnvVal("OS_REGION_NAME", "")
+		osUser := getOSEnvVal("OS_USERNAME", "")
+		osUserDomain := getOSEnvVal("OS_USER_DOMAIN_NAME", "OS_USER_DOMAIN_ID")
+		osProject := getOSEnvVal("OS_PROJECT_NAME", "OS_PROJECT_ID")
+		osProjectDomain := getOSEnvVal("OS_PROJECT_DOMAIN_NAME", "OS_PROJECT_DOMAIN_ID")
+
+		// at least one value should be available
+		if osRegion != "" || osUser != "" || osUserDomain != "" ||
+			osProject != "" || osProjectDomain != "" {
+			cloudInfo = fmt.Sprintf("%s/%s@%s/%s@%s", osRegion, osUser, osUserDomain,
+				osProject, osProjectDomain)
+		}
 	}
 
-	return withColor(bBlack, cloudName)
+	return withColor(bBlack, cloudInfo)
+}
+
+// getOSEnvVal takes two keys for OpenStack environment variables and returns the
+// corresponding value for the first key, if no value exists, then the corresponding
+// value for the second key is returned.
+func getOSEnvVal(key1, key2 string) string {
+	var val string
+	if val = os.Getenv(key1); val == "" {
+		val = os.Getenv(key2)
+	}
+
+	return val
 }
