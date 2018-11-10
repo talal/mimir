@@ -15,8 +15,12 @@ func main() {
 
 	var line []string
 	line = appendUnlessEmpty(line, prompt.GetDir())
-	line = appendUnlessEmpty(line, prompt.GetKube())
-	line = appendUnlessEmpty(line, prompt.GetOSCloud())
+	if showKubeInfo := os.Getenv("MIMIR_KUBE"); showKubeInfo != "false" {
+		line = appendUnlessEmpty(line, prompt.GetKube())
+	}
+	if showOSCloudInfo := os.Getenv("MIMIR_OS_CLOUD"); showOSCloudInfo != "false" {
+		line = appendUnlessEmpty(line, prompt.GetOSCloud())
+	}
 
 	os.Stdout.Write([]byte("\n" + strings.Join(line, " ") + "\n"))
 }

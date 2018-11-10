@@ -9,9 +9,10 @@ Mímir is a fast and minimal Zsh prompt in [Go](https://golang.org). The look of
 ![screenshot](./screenshot.png)
 
 Features:
+- It is very fast, loads in ~5ms with everything turned on.
 - Long directory paths are shortened (see screenshot above).
 - Kubernetes context/namespace info is shown using the list of kubernetes configuration file(s) taken from `KUBECONFIG` environment variable.
-- OpenStack cloud info is shown using the `CURRENT_OS_CLOUD` environment variable.
+- OpenStack cloud info is shown using the `CURRENT_OS_CLOUD` environment variable, if specified, otherwise the standard OpenStack environment variables are used to show the cloud info.
 
 ## Installation
 
@@ -30,6 +31,10 @@ $ make install
 this will put the binary in `/usr/bin/mimir` or `/usr/local/bin/mimir` for macOS.
 
 ## Usage
+
+Since the syntax to change the prompt symbol's color as per the exit code of the last command is different for Bash and Zsh therefore:
+* the prompt line with all the info is rendered by the Go binary
+* the prompt symbol is configured in the shell's configuration file
 
 ### Bash
 
@@ -65,6 +70,15 @@ add-zsh-hook precmd prompt_mimir_cmd
 prompt_symbol='❯'
 PROMPT='%(?.%F{magenta}.%F{red})${prompt_symbol}%f '
 ```
+
+### Options
+
+| Option | Description | Usage |
+| --- | --- | --- |
+| `MIMIR_KUBE` | Show Kubernetes context and namespace info. | `export MIMIR_KUBE='false'` |
+| `MIMIR_OS_CLOUD` | Show OpenStack cloud info. | `export MIMIR_OS_CLOUD='false'` |
+
+All the options are set to 'true' by default.
 
 ## Credits
 
