@@ -87,6 +87,9 @@ func GetOSCloud() string {
 				osProject, osProjectDomain)
 		}
 	}
+	if cloudInfo == "" {
+		return ""
+	}
 
 	return withColor(bBlack, cloudInfo)
 }
