@@ -2,6 +2,14 @@
 
 
 [[projects]]
+  branch = "master"
+  digest = "1:f0dd5df09dc20b01321bf6cd21ca1f8a5bb69b4ac85bc76257705071ab2097e6"
+  name = "github.com/talal/go-bits"
+  packages = ["color"]
+  pruneopts = "UT"
+  revision = "2def0c483cab46019a72ffb37a3c78d9624366e7"
+
+[[projects]]
   digest = "1:342378ac4dcb378a5448dd723f0784ae519383532f5e70ade24132c4c8693202"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
@@ -12,6 +20,9 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  input-imports = ["gopkg.in/yaml.v2"]
+  input-imports = [
+    "github.com/talal/go-bits/color",
+    "gopkg.in/yaml.v2",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1

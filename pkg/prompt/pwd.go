@@ -5,6 +5,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/talal/go-bits/color"
 )
 
 // GetDir returns the current working directory and the
@@ -31,11 +33,11 @@ func GetDir() string {
 	}
 
 	if gitDir != "" {
-		return withColor(blue, displayPath) + " " +
-			withColor(cyan, getRepo(gitDir))
+		return color.Sprintf(color.Blue, displayPath) + " " +
+			color.Sprintf(color.Cyan, getRepo(gitDir))
 	}
 
-	return withColor(blue, displayPath)
+	return color.Sprintf(color.Blue, displayPath)
 }
 
 func findRepo(path string) (string, error) {

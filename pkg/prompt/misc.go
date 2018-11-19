@@ -1,22 +1,6 @@
 package prompt
 
-import (
-	"fmt"
-	"os"
-)
-
-type color string
-
-const (
-	bBlack color = "0;90"
-	red    color = "0;31"
-	blue   color = "0;34"
-	cyan   color = "0;36"
-)
-
-func withColor(c color, str string) string {
-	return fmt.Sprintf("\x1B[%sm%s\x1B[0m", c, str)
-}
+import "os"
 
 func handleError(err error) {
 	if err != nil {

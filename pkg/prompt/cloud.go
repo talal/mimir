@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/talal/go-bits/color"
 	yaml "gopkg.in/yaml.v2"
 )
 
@@ -26,7 +27,7 @@ func GetKube() string {
 		return ""
 	}
 
-	return withColor(red, context)
+	return color.Sprintf(color.Red, context)
 }
 
 func getKubeCtx(configPath string) string {
@@ -91,7 +92,7 @@ func GetOSCloud() string {
 		return ""
 	}
 
-	return withColor(bBlack, cloudInfo)
+	return color.Sprintf(color.BrightBlack, cloudInfo)
 }
 
 // getOSEnvVal takes two keys for OpenStack environment variables and returns the
