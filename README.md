@@ -16,9 +16,19 @@ Features:
 
 ## Installation
 
-Download the latest pre-compiled binary from the [releases](https://github.com/talal/mimir/releases/latest) page.
+### Pre-compiled binaries
 
-Alternatively, you can also build from source:
+Pre-compiled binaries for Linux and macOS are avaiable on the [releases](https://github.com/talal/mimir/releases/latest) page.
+
+The binaries are static executables.
+
+### Homebrew
+
+```
+brew install talal/tap/mimir
+```
+
+### Building from source
 
 The only required build dependency is [Go](https://golang.org/).
 
