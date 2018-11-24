@@ -50,7 +50,4 @@ release/$(BINARY64): FORCE
 clean: FORCE
 	rm -rf build release
 
-vendor: FORCE
-	dep ensure
-
 .PHONY: FORCE
