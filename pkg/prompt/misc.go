@@ -1,9 +1,13 @@
 package prompt
 
-import "os"
+import (
+	"os"
+
+	"github.com/talal/go-bits/color"
+)
 
 func handleError(err error) {
 	if err != nil {
-		os.Stderr.Write([]byte("\x1B[1;31mPrompt error: " + err.Error() + "\x1B[0m\n"))
+		color.Fprintf(os.Stderr, color.Red, "Prompt error: %v\n", err)
 	}
 }

@@ -4,12 +4,13 @@ import (
 	"os"
 	"strings"
 
+	"github.com/talal/go-bits/color"
 	"github.com/talal/mimir/pkg/prompt"
 )
 
 func main() {
 	if len(os.Args) > 1 {
-		os.Stderr.Write([]byte("\x1B[1;31mPrompt error: " + "no arguing with Mímir" + "\x1B[0m\n"))
+		color.Fprintln(os.Stderr, color.Red, "Prompt error: no arguing with Mímir")
 		os.Exit(1)
 	}
 

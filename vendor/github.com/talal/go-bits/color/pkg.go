@@ -1,6 +1,9 @@
 package color
 
-import "fmt"
+import (
+	"fmt"
+	"io"
+)
 
 type color string
 
@@ -28,6 +31,23 @@ const (
 	BrightWhite   color = "0;97"
 )
 
+// Fprint is like fmt.Fprint but with color.
+func Fprint(w io.Writer, c color, a ...interface{}) (n int, err error) {
+	format := makeFormat(a)
+	return fmt.Fprintf(w, "\x1B[%sm%s\x1B[0m", c, fmt.Sprintf(format, a...))
+}
+
+// Fprintf is like fmt.Fprintf but with color.
+func Fprintf(w io.Writer, c color, format string, a ...interface{}) (n int, err error) {
+	return fmt.Fprintf(w, "\x1B[%sm%s\x1B[0m", c, fmt.Sprintf(format, a...))
+}
+
+// Fprintln is like fmt.Fprintln but with color.
+func Fprintln(w io.Writer, c color, a ...interface{}) (n int, err error) {
+	format := makeFormat(a)
+	return fmt.Fprintf(w, "\x1B[%sm%s\x1B[0m\n", c, fmt.Sprintf(format, a...))
+}
+
 // Sprintf is like fmt.Sprintf but with color.
 func Sprintf(c color, format string, a ...interface{}) string {
 	return fmt.Sprintf("\x1B[%sm%s\x1B[0m", c, fmt.Sprintf(format, a...))
@@ -40,7 +60,11 @@ func Printf(c color, format string, a ...interface{}) (n int, err error) {
 
 // Println is like fmt.Println but with color.
 func Println(c color, a ...interface{}) (n int, err error) {
-	var format string
+	format := makeFormat(a)
+	return fmt.Printf("\x1B[%sm%s\x1B[0m\n", c, fmt.Sprintf(format, a...))
+}
+
+func makeFormat(a ...interface{}) (format string) {
 	for i := 0; i < len(a); i++ {
 		if i == 0 {
 			format += "%v"
@@ -48,5 +72,5 @@ func Println(c color, a ...interface{}) (n int, err error) {
 			format += " %v"
 		}
 	}
-	return fmt.Printf("\x1B[%sm%s\x1B[0m\n", c, fmt.Sprintf(format, a...))
+	return format
 }
