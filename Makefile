@@ -31,11 +31,11 @@ install: FORCE all
 	install -m 0755 build/mimir "$(DESTDIR)$(PREFIX)/bin/mimir"
 
 ifeq ($(GOOS),windows)
-release: release/$(BINARY64)
+release: FORCE release/$(BINARY64)
 	cd release && cp -f $(BINARY64) mimir.exe && zip $(RELEASE64).zip mimir.exe
 	cd release && rm -f mimir.exe
-else 
-release: release/$(BINARY64)
+else
+release: FORCE release/$(BINARY64)
 	cd release && cp -f $(BINARY64) mimir && tar -czf $(RELEASE64).tar.gz mimir
 	cd release && rm -f mimir
 endif
