@@ -17,14 +17,22 @@ func GetDir() string {
 		handleError(err)
 	}
 
-	homePath := "/Users/" + os.Getenv("USER")
-	displayPath := strings.Replace(cwd, homePath, "~", 1)
+	displayPath := cwd
 
-	if pathList := strings.Split(displayPath, "/"); len(pathList) > 6 {
-		for i, v := range pathList[:len(pathList)-2] {
-			pathList[i] = v[:1]
+	if displayPath != "/" {
+		displayPath = filepath.Clean(displayPath)
+		homePath := "/Users/" + os.Getenv("USER")
+		displayPath = strings.Replace(displayPath, homePath, "~", 1)
+
+		if pathList := strings.Split(displayPath, "/"); len(pathList) > 6 {
+			for i, v := range pathList[:len(pathList)-2] {
+				// pathList[0] will be an empty string due to leading '/'
+				if len(v) > 0 {
+					pathList[i] = v[:1]
+				}
+			}
+			displayPath = strings.Join(pathList, "/")
 		}
-		displayPath = strings.Join(pathList, "/")
 	}
 
 	gitDir, err := findRepo(cwd)
