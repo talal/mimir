@@ -4,21 +4,39 @@
 [![Build Status](https://travis-ci.org/talal/mimir.svg?branch=master)](https://travis-ci.org/talal/mimir)
 [![Go Report Card](https://goreportcard.com/badge/github.com/talal/mimir)](https://goreportcard.com/report/github.com/talal/mimir)
 
-Mímir is a fast and minimal Zsh prompt in [Go](https://golang.org). The look of Mímir is inspired by [Pure](https://github.com/sindresorhus/pure) and the functionality is inspired by [prettyprompt](https://github.com/majewsky/gofu#prettyprompt).
+Mímir is a fast and minimal Zsh prompt in [Go](https://golang.org). The look of
+Mímir is inspired by [Pure](https://github.com/sindresorhus/pure) and the
+functionality is inspired by
+[prettyprompt](https://github.com/majewsky/gofu#prettyprompt).
 
 ![screenshot](./screenshot.png)
 
 Features:
-- It is very fast, loads in ~5ms with everything turned on.
+- It is very fast: loads in ~5ms with everything turned on.
 - Long directory paths are shortened (see screenshot above).
-- Kubernetes context/namespace info is shown using the list of kubernetes configuration file(s) taken from `KUBECONFIG` environment variable.
-- OpenStack cloud info is shown using the `CURRENT_OS_CLOUD` environment variable, if specified, otherwise the standard OpenStack environment variables are used to show the cloud info.
+- Kubernetes context and namespace info is shown using the list of kubernetes
+  configuration file(s) taken from `KUBECONFIG` environment variable.
+- OpenStack cloud info is shown using the `CURRENT_OS_CLOUD` environment
+  variable, if specified, otherwise the standard OpenStack environment
+  variables are used to show the cloud info.
+
+The Mímir Go binary only displays the (pre) prompt line with all the
+information. The actual prompt line (with the symbol; `❯` as shown in the
+screenshot above) is configured in the shell's config file. This allows for
+flexibility:
+- You can configure the prompt to your preference, e.g. custom prompt symbol,
+  user or host name before prompt symbol, etc.
+- You can use this with any shell of your choosing. The description says Bash
+  and Zsh because these are the shells which I have tested Mímir on, but in
+  reality you can use Mímir with any shell as long as it allows you to load a
+  binary as a prompt.
 
 ## Installation
 
 ### Pre-compiled binaries
 
-Pre-compiled binaries for Linux and macOS are avaiable on the [releases](https://github.com/talal/mimir/releases/latest) page.
+Pre-compiled binaries for Linux and macOS are avaiable on the
+[releases](https://github.com/talal/mimir/releases/latest) page.
 
 The binaries are static executables.
 
@@ -42,9 +60,10 @@ this will put the binary in `/usr/bin/mimir` or `/usr/local/bin/mimir` for macOS
 
 ## Usage
 
-Since the syntax to change the prompt symbol's color as per the exit code of the last command is different for Bash and Zsh therefore:
-* the prompt line with all the info is rendered by the Go binary
-* the prompt symbol is configured in the shell's configuration file
+The following usage examples for Bash and Zsh are just one example of how Mímir
+can be configured. The examples below will result in a setup similar to the
+screenshot shown above: the prompt symbol (`❯`) changes to red if the previous
+command exited with an error.
 
 ### Bash
 
@@ -52,18 +71,13 @@ Add this to your `.bashrc` file:
 
 ```bash
 prompt_mimir_cmd() {
-  local exit_code="$?"
-  local resetColor='\[\e[0m\]'
-  local red='\[\e[0;31m\]'
-  local magenta='\[\e[0;35m\]'
-
-  if [ $exit_code != 0 ]; then
-    local prompt_symbol="${red}❯${resetColor}"
+  if [ $? != 0 ]; then
+    local prompt_symbol="\[\e[0;31m\]❯\[\e[0m\]"
   else
-    local prompt_symbol="${magenta}❯${resetColor}"
+    local prompt_symbol="\[\e[0;35m\]❯\[\e[0m\]"
   fi
 
-  PS1="$(/path/to/mimir)\n${prompt_symbol} "
+  PS1="$(/usr/local/bin/mimir)\n${prompt_symbol} "
 }
 PROMPT_COMMAND=prompt_mimir_cmd
 ```
@@ -85,11 +99,10 @@ PROMPT='%(?.%F{magenta}.%F{red})${prompt_symbol}%f '
 
 | Option | Description | Usage |
 | --- | --- | --- |
-| `MIMIR_KUBE` | Show Kubernetes context and namespace info. | `export MIMIR_KUBE='false'` |
-| `MIMIR_OS_CLOUD` | Show OpenStack cloud info. | `export MIMIR_OS_CLOUD='false'` |
-
-All the options are set to 'true' by default.
+| `MIMIR_KUBE` | Disable Kubernetes context and namespace info. | `export MIMIR_KUBE='false'` |
+| `MIMIR_OS_CLOUD` | Disable OpenStack cloud info. | `export MIMIR_OS_CLOUD='false'` |
 
 ## Credits
 
-Most of the source code is borrowed from [prettyprompt](https://github.com/majewsky/gofu#prettyprompt).
+Most of the source code is borrowed from
+[prettyprompt](https://github.com/majewsky/gofu#prettyprompt).

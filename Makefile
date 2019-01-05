@@ -6,7 +6,7 @@ endif
 PKG      = github.com/talal/mimir
 VERSION := $(shell util/find_version.sh)
 
-GO          := GOPATH=$(CURDIR)/.gopath GOBIN=$(CURDIR)/build go
+GO          := GOBIN=$(CURDIR)/build go
 BUILD_FLAGS :=
 LD_FLAGS    := -s -w
 
@@ -21,10 +21,11 @@ RELEASE64 := mimir-$(VERSION)-$(GOOS)_amd64
 
 all: build/mimir
 
-# This target uses the incremental rebuild capabilities of the Go compiler to speed things up.
-# If no source files have changed, `go install` exits quickly without doing anything.
+# This target uses the incremental rebuild capabilities of the Go compiler to
+# speed things up. If no source files have changed, `go install` exits quickly
+# without doing anything.
 build/mimir: FORCE
-	$(GO) install $(BUILD_FLAGS) -ldflags '$(LD_FLAGS)' '$(PKG)'
+	$(GO) install $(BUILD_FLAGS) -ldflags '$(LD_FLAGS)' '$(PKG)/cmd/mimir'
 
 install: FORCE all
 	install -d -m 0755 "$(DESTDIR)$(PREFIX)/bin"

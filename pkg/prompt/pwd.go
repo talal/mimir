@@ -9,46 +9,40 @@ import (
 	"github.com/talal/go-bits/color"
 )
 
-// GetDir returns the current working directory and the
-// git branch (if the directory is a git repo).
-func GetDir() string {
+// getDir returns the current working directory and the git branch (if the
+// directory is a git repo).
+func getDir() string {
 	cwd, err := os.Getwd()
-	if err != nil {
-		handleError(err)
-	}
+	handleError(err)
 
-	displayPath := cwd
+	pathToDisplay := filepath.Clean(cwd)
+	if pathToDisplay != "/" {
+		homePath := os.Getenv("HOME")
+		pathToDisplay = strings.Replace(pathToDisplay, homePath, "~", 1)
 
-	if displayPath != "/" {
-		displayPath = filepath.Clean(displayPath)
-		homePath := "/Users/" + os.Getenv("USER")
-		displayPath = strings.Replace(displayPath, homePath, "~", 1)
-
-		if pathList := strings.Split(displayPath, "/"); len(pathList) > 6 {
+		if pathList := strings.Split(pathToDisplay, "/"); len(pathList) > 6 {
 			for i, v := range pathList[:len(pathList)-2] {
 				// pathList[0] will be an empty string due to leading '/'
 				if len(v) > 0 {
 					pathList[i] = v[:1]
 				}
 			}
-			displayPath = strings.Join(pathList, "/")
+			pathToDisplay = strings.Join(pathList, "/")
 		}
 	}
 
-	gitDir, err := findRepo(cwd)
-	if err != nil {
-		handleError(err)
-	}
+	gitDir, err := findGitRepo(cwd)
+	handleError(err)
 
 	if gitDir != "" {
-		return color.Sprintf(color.Blue, displayPath) + " " +
-			color.Sprintf(color.Cyan, getRepo(gitDir))
+		return color.Sprintf(color.Blue, pathToDisplay) + " " +
+			color.Sprintf(color.Cyan, currentGitBranch(gitDir))
 	}
 
-	return color.Sprintf(color.Blue, displayPath)
+	return color.Sprintf(color.Blue, pathToDisplay)
 }
 
-func findRepo(path string) (string, error) {
+func findGitRepo(path string) (string, error) {
 	gitEntry := filepath.Join(path, ".git")
 	fi, err := os.Stat(gitEntry)
 	switch {
@@ -59,7 +53,7 @@ func findRepo(path string) (string, error) {
 	case path == "/":
 		return "", nil
 	default:
-		return findRepo(filepath.Dir(path))
+		return findGitRepo(filepath.Dir(path))
 	}
 
 	if !fi.IsDir() {
@@ -69,7 +63,7 @@ func findRepo(path string) (string, error) {
 	return gitEntry, nil
 }
 
-func getRepo(gitDir string) string {
+func currentGitBranch(gitDir string) string {
 	bytes, err := ioutil.ReadFile(filepath.Join(gitDir, "HEAD"))
 	if err != nil {
 		handleError(err)

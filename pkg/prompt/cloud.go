@@ -11,9 +11,9 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-// GetKube iterates over the config files defined in the "KUBECONFIG" environment
+// getKube iterates over the config files defined in the "KUBECONFIG" environment
 // variable and returns the current kubernetes context and namespace.
-func GetKube() string {
+func getKube() string {
 	configPaths := filepath.SplitList(os.Getenv("KUBECONFIG"))
 
 	var context string
@@ -27,14 +27,14 @@ func GetKube() string {
 		return ""
 	}
 
-	return color.Sprintf(color.Red, context)
+	return color.Sprintf(color.BrightBlack, context)
 }
 
 func getKubeCtx(configPath string) string {
 	buf, err := ioutil.ReadFile(configPath)
 	if err != nil {
-		//non-existence is acceptable, just make the caller continue
-		// with the next configPath
+		// non-existence is acceptable, just make the caller continue with the
+		// next configPath
 		if !os.IsNotExist(err) {
 			handleError(err)
 		}
@@ -69,10 +69,10 @@ func getKubeCtx(configPath string) string {
 	return strings.TrimSpace(data.CurrentContext)
 }
 
-// GetOSCloud returns the current OpenStack cloud info using the "CURRENT_OS_CLOUD"
-// enviroment variable, if set. If not, then individual OpenStack environment variables
-// are used to get the cloud info.
-func GetOSCloud() string {
+// getOSCloud returns the current OpenStack cloud info using the
+// "CURRENT_OS_CLOUD" enviroment variable, if set. If not, then individual
+// OpenStack environment variables are used to get the cloud info.
+func getOSCloud() string {
 	cloudInfo := os.Getenv("CURRENT_OS_CLOUD")
 	if cloudInfo == "" {
 		osRegion := getOSEnvVal("OS_REGION_NAME", "")
@@ -95,9 +95,9 @@ func GetOSCloud() string {
 	return color.Sprintf(color.BrightBlack, cloudInfo)
 }
 
-// getOSEnvVal takes two keys for OpenStack environment variables and returns the
-// corresponding value for the first key, if no value exists, then the corresponding
-// value for the second key is returned.
+// getOSEnvVal takes two keys for OpenStack environment variables and returns
+// the corresponding value for the first key, if no value exists, then the
+// corresponding value for the second key is returned.
 func getOSEnvVal(key1, key2 string) string {
 	var val string
 	if val = os.Getenv(key1); val == "" {
