@@ -46,7 +46,7 @@ release-all: FORCE clean
 	GOOS=linux  make release
 
 release/$(BINARY64): FORCE
-	GOARCH=amd64 $(GO) build $(BUILD_FLAGS) -o $@ -ldflags '$(LD_FLAGS)' '$(PKG)'
+	GOARCH=amd64 $(GO) build $(BUILD_FLAGS) -o $@ -ldflags '$(LD_FLAGS)' '$(PKG)/cmd/mimir'
 
 clean: FORCE
 	rm -rf build release

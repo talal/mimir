@@ -77,7 +77,7 @@ prompt_mimir_cmd() {
     local prompt_symbol="\[\e[0;35m\]❯\[\e[0m\]"
   fi
 
-  PS1="$(/usr/local/bin/mimir)\n${prompt_symbol} "
+  PS1="$(/path/to/mimir)\n${prompt_symbol} "
 }
 PROMPT_COMMAND=prompt_mimir_cmd
 ```
