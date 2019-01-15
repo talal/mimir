@@ -27,7 +27,7 @@ func getKube() string {
 		return ""
 	}
 
-	return color.Sprintf(color.BrightBlack, context)
+	return color.Sprintf(color.Yellow, context)
 }
 
 func getKubeCtx(configPath string) string {
@@ -92,7 +92,7 @@ func getOSCloud() string {
 		return ""
 	}
 
-	return color.Sprintf(color.BrightBlack, cloudInfo)
+	return color.Sprintf(color.Magenta, cloudInfo)
 }
 
 // getOSEnvVal takes two keys for OpenStack environment variables and returns
