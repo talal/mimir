@@ -9,10 +9,10 @@ import (
 func Info() string {
 	var line []string
 	line = appendUnlessEmpty(line, getDir())
-	if os.Getenv("MIMIR_KUBE") != "false" {
+	if os.Getenv("MIMIR_KUBE") != "0" {
 		line = appendUnlessEmpty(line, getKube())
 	}
-	if os.Getenv("MIMIR_OS_CLOUD") != "false" {
+	if os.Getenv("MIMIR_OS_CLOUD") != "0" {
 		line = appendUnlessEmpty(line, getOSCloud())
 	}
 

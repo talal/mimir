@@ -99,8 +99,8 @@ PROMPT='%(?.%F{magenta}.%F{red})${prompt_symbol}%f '
 
 | Option | Description | Usage |
 | --- | --- | --- |
-| `MIMIR_KUBE` | Disable Kubernetes context and namespace info. | `export MIMIR_KUBE='false'` |
-| `MIMIR_OS_CLOUD` | Disable OpenStack cloud info. | `export MIMIR_OS_CLOUD='false'` |
+| `MIMIR_KUBE` | Disable Kubernetes context and namespace info. | `export MIMIR_KUBE='0'` |
+| `MIMIR_OS_CLOUD` | Disable OpenStack cloud info. | `export MIMIR_OS_CLOUD='0'` |
 
 ## Credits
 
