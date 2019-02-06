@@ -1,8 +1,4 @@
-ifeq ($(shell uname -s),Darwin)
-	PREFIX  := /usr/local
-else
-	PREFIX  := /usr
-endif
+PREFIX  := /usr/local
 PKG      = github.com/talal/mimir
 VERSION := $(shell util/find_version.sh)
 
@@ -28,8 +24,7 @@ build/mimir: FORCE
 	$(GO) install $(BUILD_FLAGS) -ldflags '$(LD_FLAGS)' '$(PKG)/cmd/mimir'
 
 install: FORCE all
-	install -d -m 0755 "$(DESTDIR)$(PREFIX)/bin"
-	install -m 0755 build/mimir "$(DESTDIR)$(PREFIX)/bin/mimir"
+	install -D build/mimir "$(DESTDIR)$(PREFIX)/bin/mimir"
 
 ifeq ($(GOOS),windows)
 release: FORCE release/$(BINARY64)
