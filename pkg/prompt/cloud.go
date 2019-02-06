@@ -70,7 +70,7 @@ func getKubeCtx(configPath string) string {
 }
 
 // getOSCloud returns the current OpenStack cloud info using the
-// "CURRENT_OS_CLOUD" enviroment variable, if set. If not, then individual
+// "CURRENT_OS_CLOUD" environment variable, if set. If not, then individual
 // OpenStack environment variables are used to get the cloud info.
 func getOSCloud() string {
 	cloudInfo := os.Getenv("CURRENT_OS_CLOUD")

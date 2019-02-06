@@ -1,37 +1,55 @@
 # Mímir
 
-[![GitHub release](https://img.shields.io/github/release/talal/mimir.svg)](https://github.com/talal/mimir/releases/latest)
-[![Build Status](https://travis-ci.org/talal/mimir.svg?branch=master)](https://travis-ci.org/talal/mimir)
-[![Go Report Card](https://goreportcard.com/badge/github.com/talal/mimir)](https://goreportcard.com/report/github.com/talal/mimir)
+[![GitHub Release](https://img.shields.io/github/release/talal/mimir.svg?style=flat-square)](https://github.com/talal/mimir/releases/latest)
+[![Build Status](https://img.shields.io/travis/talal/mimir/master.svg?style=flat-square)](https://travis-ci.org/talal/mimir)
+[![Go Report Card](https://goreportcard.com/badge/github.com/talal/mimir?style=flat-square)](https://goreportcard.com/report/github.com/talal/mimir)
+[![Software License](https://img.shields.io/github/license/talal/mimir.svg?style=flat-square)](LICENSE)
 
-Mímir is a fast and minimal Zsh prompt in [Go](https://golang.org). The look of
-Mímir is inspired by [Pure](https://github.com/sindresorhus/pure) and the
-functionality is inspired by
+Mímir is a fast and minimal shell prompt written in [Go](https://golang.org).
+The look of Mímir is inspired by [Pure](https://github.com/sindresorhus/pure)
+and the functionality is inspired by
 [prettyprompt](https://github.com/majewsky/gofu#prettyprompt).
 
-![screenshot](./screenshot.png)
-
-Features:
-- It is very fast: loads in ~5ms with everything turned on.
-- Long directory paths are shortened (see screenshot above).
-- Kubernetes context and namespace info is shown using the list of kubernetes
-  configuration file(s) taken from `KUBECONFIG` environment variable.
-- OpenStack cloud info is shown using the `CURRENT_OS_CLOUD` environment
-  variable, if specified, otherwise the standard OpenStack environment
-  variables are used to show the cloud info.
+[![asciicast](https://asciinema.org/a/225675.svg)](https://asciinema.org/a/225675)
 
 The Mímir Go binary only displays the (pre) prompt line with all the
-information. The actual prompt line (with the symbol; `❯` as shown in the
-screenshot above) is configured in the shell's config file. This allows for
-flexibility:
-- You can configure the prompt to your preference, e.g. custom prompt symbol,
-  user or host name before prompt symbol, etc.
-- You can use this with any shell of your choosing. The description says Bash
-  and Zsh because these are the shells which I have tested Mímir on, but in
-  reality you can use Mímir with any shell as long as it allows you to load a
-  binary as a prompt.
+information. The actual prompt line used for input is configured in the shell's
+config file. This allows for flexibility:
+- You can configure the prompt line to your preference, e.g. you can specify a
+  prompt symbol of your choice, add user or host name info, etc.
+- You can use Mímir with any shell of your choosing. The description says Bash
+  and Zsh because these are the shells which I have tested Mímir on but
+  technically you can use Mímir with any shell as long as it allows you to load
+  a binary as a prompt.
+
+## Features
+
+- It is very fast: loads under 5ms with everything turned on
+  ([benchmark](https://asciinema.org/a/225680)).
+- Shows current Git branch name.
+- Long directory paths are shortened and inaccessible paths are highlighted in
+  red.
+- Kubernetes context and namespace info is shown using `KUBECONFIG` environment
+  variable. If multiple config files are specified in the variable value then
+  the first one with current context info is used.
+- OpenStack cloud info is shown using the standard OpenStack environment
+  variables that begin with `OS_`. Variables that specify IDs are used if name
+  specifying variables are not available, e.g. `OS_PROJECT_DOMAIN_ID` would be
+  used if `OS_PROJECT_DOMAIN_NAME` is not available. You can override the cloud
+  info by exporting the `CURRENT_OS_CLOUD` variable with an arbitrary value.
+
 
 ## Installation
+
+### Installer script
+
+The simplest way to install Mímir on Linux or macOS is to run:
+
+```
+$ sh -c "$(curl -sL git.io/getmimir)"
+```
+
+This will put the binary in `/usr/local/bin/mimir`
 
 ### Pre-compiled binaries
 
@@ -43,7 +61,7 @@ The binaries are static executables.
 ### Homebrew
 
 ```
-brew install talal/tap/mimir
+$ brew install talal/tap/mimir
 ```
 
 ### Building from source
@@ -56,13 +74,13 @@ $ cd $GOPATH/src/github.com/talal/mimir
 $ make install
 ```
 
-this will put the binary in `/usr/bin/mimir` or `/usr/local/bin/mimir` for macOS.
+This will put the binary in `/usr/local/bin/mimir`
 
 ## Usage
 
-The following usage examples for Bash and Zsh are just one example of how Mímir
-can be configured. The examples below will result in a setup similar to the
-screenshot shown above: the prompt symbol (`❯`) changes to red if the previous
+The following usage examples are just one example of how Mímir can be
+configured. The examples below will result in a setup similar to the one shown
+in the demo above: the prompt symbol (`❯`) changes to red if the previous
 command exited with an error.
 
 ### Bash
