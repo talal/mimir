@@ -2,72 +2,10 @@ package prompt
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
-	"path/filepath"
-	"strings"
 
 	"github.com/talal/go-bits/color"
-	yaml "gopkg.in/yaml.v2"
 )
-
-// getKube iterates over the config files defined in the "KUBECONFIG" environment
-// variable and returns the current kubernetes context and namespace.
-func getKube() string {
-	configPaths := filepath.SplitList(os.Getenv("KUBECONFIG"))
-
-	var context string
-	for _, configPath := range configPaths {
-		context = getKubeCtx(configPath)
-		if context != "" {
-			break
-		}
-	}
-	if context == "" {
-		return ""
-	}
-
-	return color.Sprintf(color.Yellow, context)
-}
-
-func getKubeCtx(configPath string) string {
-	buf, err := ioutil.ReadFile(configPath)
-	if err != nil {
-		// non-existence is acceptable, just make the caller continue with the
-		// next configPath
-		if !os.IsNotExist(err) {
-			handleError(err)
-		}
-		return ""
-	}
-
-	var data struct {
-		Contexts []struct {
-			Context struct {
-				Cluster   string `yaml:"cluster"`
-				Namespace string `yaml:"namespace"`
-				User      string `yaml:"user"`
-			} `yaml:"context"`
-			Name string `yaml:"name"`
-		} `yaml:"contexts"`
-		CurrentContext string `yaml:"current-context"`
-	}
-	err = yaml.Unmarshal(buf, &data)
-	handleError(err)
-
-	if data.CurrentContext == "" {
-		return ""
-	}
-
-	for _, c := range data.Contexts {
-		if c.Name == data.CurrentContext {
-			return fmt.Sprintf("(%v/%v)", strings.TrimSpace(data.CurrentContext),
-				strings.TrimSpace(c.Context.Namespace))
-		}
-	}
-
-	return strings.TrimSpace(data.CurrentContext)
-}
 
 // getOSCloud returns the current OpenStack cloud info using the
 // "CURRENT_OS_CLOUD" environment variable, if set. If not, then individual
