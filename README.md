@@ -110,7 +110,7 @@ prompt_mimir_cmd() { /path/to/mimir }
 add-zsh-hook precmd prompt_mimir_cmd
 
 prompt_symbol='❯'
-PROMPT='%(?.%F{magenta}.%F{red})${prompt_symbol}%f '
+PROMPT="%(?.%F{magenta}.%F{red})${prompt_symbol}%f "
 ```
 
 ### Options
