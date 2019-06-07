@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/talal/go-bits/color"
-	"github.com/talal/mimir/pkg/prompt"
+	"github.com/talal/mimir/internal/prompt"
 )
 
 func main() {
