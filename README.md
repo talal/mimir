@@ -31,11 +31,12 @@ config file. This allows for flexibility:
   red.
 - Kubernetes context and namespace info is shown using `KUBECONFIG` environment
   variable. If multiple config files are specified in the variable value then
-  the first one with current context info is used.
+  the first one with current context info is used. You can overwrite the K8s
+  info by exporting the `CURRENT_KUBE_CTX` variable with an arbitrary value.
 - OpenStack cloud info is shown using the standard OpenStack environment
   variables that begin with `OS_`. Variables that specify IDs are used if name
-  specifying variables are not available, e.g. `OS_PROJECT_DOMAIN_ID` would be
-  used if `OS_PROJECT_DOMAIN_NAME` is not available. You can override the cloud
+  specifying variables are not available. E.g. `OS_PROJECT_DOMAIN_ID` would be
+  used if `OS_PROJECT_DOMAIN_NAME` is not available. You can overwrite the cloud
   info by exporting the `CURRENT_OS_CLOUD` variable with an arbitrary value.
 
 
@@ -66,15 +67,24 @@ $ brew install talal/tap/mimir
 
 ### Building from source
 
-The only required build dependency is [Go](https://golang.org/).
+The only required build dependency is [Go](https://golang.org/) 1.11 or above.
 
 ```
-$ go get github.com/talal/mimir
-$ cd $GOPATH/src/github.com/talal/mimir
+$ git clone https://github.com/talal/mimir.git
+$ cd mimir
 $ make install
 ```
 
 This will put the binary in `/usr/local/bin/mimir`
+
+Alternatively, you can also build Mímir directly with the go get command without
+manually cloning the repository:
+
+```
+$ go get -u github.com/talal/mimir
+```
+
+This will put the binary in `$GOPATH/bin/mimir`
 
 ## Usage
 
@@ -117,8 +127,10 @@ PROMPT="%(?.%F{magenta}.%F{red})${prompt_symbol}%f "
 
 | Option | Description | Usage |
 | --- | --- | --- |
-| `MIMIR_KUBE` | Disable Kubernetes context and namespace info. | `export MIMIR_KUBE='0'` |
-| `MIMIR_OS_CLOUD` | Disable OpenStack cloud info. | `export MIMIR_OS_CLOUD='0'` |
+| `MIMIR_DISABLE_KUBE` | Disable Kubernetes context and namespace info. | `export MIMIR_DISABLE_KUBE=1` |
+| `MIMIR_DISABLE_CLOUD` | Disable OpenStack cloud info. | `export MIMIR_DISABLE_CLOUD=1` |
+| `CURRENT_KUBE_CTX` | Display arbitrary info for K8s. | `export CURRENT_KUBE_CTX='custom info'` |
+| `CURRENT_OS_CLOUD` | Display arbitrary info for OpenStack. | `export CURRENT_OS_CLOUD='custom info'` |
 
 ## Credits
 

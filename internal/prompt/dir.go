@@ -9,15 +9,8 @@ import (
 	"github.com/talal/go-bits/color"
 )
 
-// getDir returns the current working directory and the git branch (if the
-// directory is a git repo).
-func getDir() string {
-	cwd, err := os.Getwd()
-	if err != nil {
-		cwd = os.Getenv("PWD")
-	}
-	cwd = filepath.Clean(cwd)
-
+// getDir returns information regarding the current working directory.
+func getDir(cwd string) string {
 	if cwd == "/" {
 		return color.Sprintf(color.Blue, cwd)
 	}

@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.0.0 - 2019-06-07
+### Fixed
+- Minor code refactoring.
+
+### Added
+- New config option: `CURRENT_KUBE_CTX` that can be used to display an arbitrary
+info for Kubernetest instead of context/namespace.
+
+### Changed
+- `MIMIR_KUBE` has been renamed to `MIMIR_DISABLE_KUBE` and `MIMIR_OS_CLOUD` has been renamed to `MIMIR_DISABLE_CLOUD`. See Readme for their usage.
+
 ## v1.2.0 - 2019-01-23
 ### Added
 - Highlight inaccessible directory path in red.

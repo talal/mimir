@@ -1,36 +1,43 @@
 #!/bin/sh
-# script borrowed from https://github.com/getantibody/installer
-set -e
-DOWNLOAD_URL="https://github.com/talal/mimir/releases/download"
+set -euo pipefail
 
-last_version() {
-  curl -s https://raw.githubusercontent.com/talal/homebrew-tap/master/Formula/mimir.rb |
-    grep version |
-    cut -f2 -d'"'
+OS_TYPE=$(uname -s)
+if ! [ "$OS_TYPE" == "Darwin" ]  && ! [ "$OS_TYPE" == "Linux" ]; then
+	printf "\e[1;31m==> This script only works on macOS and Linux, '${OS_TYPE}' is not supported\e[0m\n"
+	exit 1
+fi
+
+# Borrowed from https://gist.github.com/lukechilds/a83e1d7127b78fef38c2914c4ececc3c
+get_latest_release() {
+	curl --silent "https://api.github.com/repos/$1/releases/latest" | # Get latest release from GitHub API
+	grep '"tag_name":' | # Get tag line
+	sed -E 's/.*"v([^"]+)".*/\1/' # Pluck version number
 }
+VERSION="$(get_latest_release 'talal/mimir')"
+
+TEMP_DIR="$(mktemp -d)"
 
 download() {
-	version="$(last_version)" || true
-  test -z "$version" && {
-    echo "Unable to get mimir version."
-    exit 1
-  }
-  echo "Downloading mimir v$version for $(uname -s)..."
-  rm -f /tmp/mimir /tmp/mimir.tar.gz
-  curl -s -L -o /tmp/mimir.tar.gz \
-    "$DOWNLOAD_URL/v$version/mimir-$version-$(uname -s)_amd64.tar.gz"
+	local binary_archive="mimir-${VERSION}-${OS_TYPE}_amd64.tar.gz"
+	curl -L "https://github.com/talal/mimir/releases/download/v${VERSION}/${binary_archive}" -o ${TEMP_DIR}/mimir.tar.gz
+	tar -xzf ${TEMP_DIR}/mimir.tar.gz -C $TEMP_DIR
 }
 
-extract() {
-  tar -xf /tmp/mimir.tar.gz -C /tmp
+install() {
+	sudo mv -f ${TEMP_DIR}/mimir /usr/local/bin/mimir
+}
+
+cleanup() {
+	rm -rf $TEMP_DIR
 }
 
 main() {
+	printf "\e[1;34m==> Downloading mimir for $(uname -s)\e[0m\n"
 	download
-	extract || true
-	sudo mv -f /tmp/mimir /usr/local/bin/mimir
-	rm -f /tmp/mimir.tar.gz
-	echo "mimir v$version installed in $(which mimir)"
+	printf "\e[1;34m==> Installing mimir\e[0m\n"
+	install
+	printf "\e[1;32m==> mimir v${VERSION} successfully installed as $(which mimir)\e[0m\n"
+	cleanup
 }
 
 main
