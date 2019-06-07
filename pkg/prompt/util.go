@@ -2,10 +2,19 @@ package prompt
 
 import (
 	"os"
+	"path/filepath"
 	"strconv"
 
 	"github.com/talal/go-bits/color"
 )
+
+func getCwd() string {
+	cwd, err := os.Getwd()
+	if err != nil {
+		cwd = os.Getenv("PWD")
+	}
+	return filepath.Clean(cwd)
+}
 
 func getBoolEnv(key string) bool {
 	val, err := strconv.ParseBool(os.Getenv("MIMIR_KUBE"))
@@ -16,10 +25,16 @@ func getBoolEnv(key string) bool {
 	return val
 }
 
-func handleError(err error) {
-	if err == nil {
-		return
+func appendUnlessEmpty(list []string, val string) []string {
+	if val == "" {
+		return list
 	}
 
-	color.Fprintf(os.Stderr, color.Red, "Prompt error: %v\n", err)
+	return append(list, val)
+}
+
+func handleError(err error) {
+	if err != nil {
+		color.Fprintf(os.Stderr, color.Red, "Prompt error: %v\n", err)
+	}
 }
