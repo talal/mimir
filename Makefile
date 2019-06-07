@@ -2,13 +2,10 @@ PREFIX  := /usr/local
 PKG      = github.com/talal/mimir
 VERSION := $(shell util/find_version.sh)
 
+GOOS        ?= $(word 1, $(subst /, " ", $(word 4, $(shell go version))))
 GO          := GOBIN=$(CURDIR)/build go
 BUILD_FLAGS :=
 LD_FLAGS    := -s -w
-
-ifndef GOOS
-	GOOS := $(word 1, $(subst /, " ", $(word 4, $(shell go version))))
-endif
 
 BINARY64  := mimir-$(GOOS)_amd64
 RELEASE64 := mimir-$(VERSION)-$(GOOS)_amd64
@@ -17,11 +14,8 @@ RELEASE64 := mimir-$(VERSION)-$(GOOS)_amd64
 
 all: build/mimir
 
-# This target uses the incremental rebuild capabilities of the Go compiler to
-# speed things up. If no source files have changed, `go install` exits quickly
-# without doing anything.
 build/mimir: FORCE
-	$(GO) install $(BUILD_FLAGS) -ldflags '$(LD_FLAGS)' '$(PKG)/cmd/mimir'
+	$(GO) install $(BUILD_FLAGS) -ldflags '$(LD_FLAGS)' '$(PKG)'
 
 install: FORCE all
 	install -D build/mimir "$(DESTDIR)$(PREFIX)/bin/mimir"
@@ -41,9 +35,9 @@ release-all: FORCE clean
 	GOOS=linux  make release
 
 release/$(BINARY64): FORCE
-	GOARCH=amd64 $(GO) build $(BUILD_FLAGS) -o $@ -ldflags '$(LD_FLAGS)' '$(PKG)/cmd/mimir'
+	GOARCH=amd64 $(GO) build $(BUILD_FLAGS) -o $@ -ldflags '$(LD_FLAGS)' '$(PKG)'
 
 clean: FORCE
-	rm -rf build release
+	rm -rf -- build release
 
 .PHONY: FORCE
