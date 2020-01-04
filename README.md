@@ -1,3 +1,8 @@
+# Archived project. No maintenance.
+
+This project is not maintained anymore and is archived. Feel free to fork and
+make your own changes if needed.
+
 # Mímir
 
 [![GitHub Release](https://img.shields.io/github/release/talal/mimir.svg?style=flat-square)](https://github.com/talal/mimir/releases/latest)
