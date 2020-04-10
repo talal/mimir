@@ -15,7 +15,7 @@ func cygpath(s string) string {
 	if os.Getenv("MSYSTEM") != "" {
 		b, err := exec.Command("cygpath", s).CombinedOutput()
 		if err == nil {
-			return string(b)
+			return strings.TrimSpace(string(b))
 		}
 	}
 	return filepath.ToSlash(s)
