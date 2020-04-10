@@ -120,7 +120,7 @@ func findGitRepo(path string) (string, error) {
 		return "", nil
 	}
 
-	return filepath.ToSlash(gitEntry), nil
+	return gitEntry, nil
 }
 
 func currentGitBranch(gitDir string) string {
