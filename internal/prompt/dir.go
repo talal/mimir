@@ -3,6 +3,7 @@ package prompt
 import (
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -10,11 +11,21 @@ import (
 	"github.com/talal/go-bits/color"
 )
 
+func cygpath(s string) string {
+	if os.Getenv("MSYSTEM") != "" {
+		b, err := exec.Command("cygpath", s).CombinedOutput()
+		if err == nil {
+			return string(b)
+		}
+	}
+	return filepath.ToSlash(s)
+}
+
 // getDir returns information regarding the current working directory.
 func getDir(cwd string) string {
 	if runtime.GOOS == "windows" {
 		if cwd == filepath.Dir(cwd) {
-			return color.Sprintf(color.Blue, filepath.ToSlash(cwd))
+			return color.Sprintf(color.Blue, cygpath(cwd))
 		}
 	} else {
 		if cwd == "/" {
@@ -38,7 +49,10 @@ func getDir(cwd string) string {
 	gitDir, err := findGitRepo(cwd)
 	handleError(err)
 
-	pathToDisplay = filepath.ToSlash(pathToDisplay)
+	if runtime.GOOS == "windows" {
+		pathToDisplay = cygpath(pathToDisplay)
+	}
+
 	if gitDir != "" {
 		return color.Sprintf(color.Blue, pathToDisplay) + " " +
 			color.Sprintf(color.Cyan, currentGitBranch(gitDir))
