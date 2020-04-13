@@ -3,16 +3,34 @@ package prompt
 import (
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 
 	"github.com/talal/go-bits/color"
 )
 
+func cygpath(s string) string {
+	if os.Getenv("MSYSTEM") != "" {
+		b, err := exec.Command("cygpath", s).CombinedOutput()
+		if err == nil {
+			return strings.TrimSpace(string(b))
+		}
+	}
+	return filepath.ToSlash(s)
+}
+
 // getDir returns information regarding the current working directory.
 func getDir(cwd string) string {
-	if cwd == "/" {
-		return color.Sprintf(color.Blue, cwd)
+	if runtime.GOOS == "windows" {
+		if cwd == filepath.Dir(cwd) {
+			return color.Sprintf(color.Blue, cygpath(cwd))
+		}
+	} else {
+		if cwd == "/" {
+			return color.Sprintf(color.Blue, cwd)
+		}
 	}
 
 	nearestAccessiblePath := findNearestAccessiblePath(cwd)
@@ -30,6 +48,10 @@ func getDir(cwd string) string {
 
 	gitDir, err := findGitRepo(cwd)
 	handleError(err)
+
+	if runtime.GOOS == "windows" {
+		pathToDisplay = cygpath(pathToDisplay)
+	}
 
 	if gitDir != "" {
 		return color.Sprintf(color.Blue, pathToDisplay) + " " +
@@ -49,7 +71,7 @@ func findNearestAccessiblePath(path string) string {
 }
 
 func shortenLongPath(path string, length int) string {
-	pList := strings.Split(path, "/")
+	pList := strings.Split(path, string(os.PathSeparator))
 	if len(pList) < 7 {
 		return path
 	}
@@ -63,11 +85,17 @@ func shortenLongPath(path string, length int) string {
 	}
 
 	shortenedPList = append(shortenedPList, pList[len(pList)-length:]...)
-	return strings.Join(shortenedPList, "/")
+	return strings.Join(shortenedPList, string(os.PathSeparator))
 }
 
 func stripHomeDir(path string) string {
-	return strings.Replace(path, os.Getenv("HOME"), "~", 1)
+	var home string
+	if runtime.GOOS == "windows" {
+		home = os.Getenv("USERPROFILE")
+	} else {
+		home = os.Getenv("HOME")
+	}
+	return strings.Replace(path, home, "~", 1)
 }
 
 func findGitRepo(path string) (string, error) {
@@ -81,7 +109,11 @@ func findGitRepo(path string) (string, error) {
 	case path == "/":
 		return "", nil
 	default:
-		return findGitRepo(filepath.Dir(path))
+		dir := filepath.Dir(path)
+		if dir == path {
+			return "", nil
+		}
+		return findGitRepo(dir)
 	}
 
 	if !fi.IsDir() {
