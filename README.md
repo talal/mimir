@@ -1,7 +1,13 @@
 # Archived project. No maintenance.
 
-This project is not maintained anymore and is archived. Feel free to fork and
-make your own changes if needed.
+**What does this mean?** No further code will be committed and the repository
+will remain in a read-only state. [Releases][releases] will still be available
+for download.
+
+**Current status:** Mímir is stable (as far as I know).
+
+**Why?** I no longer use Mímir personally, I've switched to using
+[Starship](https://github.com/starship/starship).
 
 # Mímir
 
@@ -60,7 +66,9 @@ This will put the binary in `/usr/local/bin/mimir`
 ### Pre-compiled binaries
 
 Pre-compiled binaries for Linux and macOS are avaiable on the
-[releases](https://github.com/talal/mimir/releases/latest) page.
+[releases][releases] page.
+
+[releases]: https://github.com/talal/mimir/releases/latest
 
 The binaries are static executables.
 
