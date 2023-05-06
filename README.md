@@ -1,10 +1,7 @@
 # Archived project. No maintenance.
 
 **What does this mean?** No further code will be committed and the repository
-will remain in a read-only state. [Releases][releases] will still be available
-for download.
-
-**Current status:** Mímir is stable (as far as I know).
+will remain in a read-only state.
 
 **Why?** I no longer use Mímir personally, I've switched to using
 [Starship](https://github.com/starship/starship).
@@ -68,7 +65,7 @@ This will put the binary in `/usr/local/bin/mimir`
 Pre-compiled binaries for Linux and macOS are avaiable on the
 [releases][releases] page.
 
-[releases]: https://github.com/talal/mimir/releases/latest
+[releases]: https://github.com/talal/mimir/releases
 
 The binaries are static executables.
 
