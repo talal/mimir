@@ -3,8 +3,9 @@
 **What does this mean?** No further code will be committed and the repository
 will remain in a read-only state.
 
-**Why?** I no longer use Mímir personally, I've switched to using
-[Starship](https://github.com/starship/starship).
+**Why?** I no longer have the time to maintain this project.
+
+Feel free to fork and make your own changes if needed :)
 
 # Mímir
 
